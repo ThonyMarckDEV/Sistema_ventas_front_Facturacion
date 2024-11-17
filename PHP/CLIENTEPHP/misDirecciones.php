@@ -6,12 +6,20 @@
     <title>Mis Direcciones</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex">
 
  <!-- Notificación -->
  <div id="notification" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center rounded shadow-md z-50"></div>
-    
 
     <!-- Sidebar -->
     <?php include 'sidebarCLIENTE.php'; ?>
@@ -56,8 +64,7 @@
             <button onclick="closeMapModal()" class="absolute top-2 right-2 text-gray-500">Cerrar</button>
         </div>
     </div>
-   <!-- Gestioanr direcciones js -->
+   <!-- Gestionar direcciones js -->
    <script type="module" src="../../js/gestionarDirecciones.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuzNFKH6HmqIQngXaLmeOzLAq83kf8EEA" async defer></script>
 </body>
 </html>
