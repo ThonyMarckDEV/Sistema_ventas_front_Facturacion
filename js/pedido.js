@@ -48,17 +48,6 @@ const notification = document.getElementById('notification');
 // Variable para almacenar el pedido seleccionado
 let pedidoSeleccionado = null;
 
-// Función para mostrar notificaciones
-function showNotification(message, bgColor) {
-    if (!notification) return;
-    notification.textContent = message;
-    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md`;
-    notification.style.display = "block";
-
-    setTimeout(() => {
-        notification.style.display = "none";
-    }, 5000);
-}
 
 export async function fetchPedidos() {
     // Verificar y renovar el token antes de la solicitud
@@ -74,7 +63,8 @@ export async function fetchPedidos() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                "ngrok-skip-browser-warning": "69420",
+                'Authorization': `Bearer ${token}`
             },
         });
         const data = await response.json();
@@ -174,6 +164,7 @@ async function cancelarPedido(idPedido) {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "69420",
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ idPedido })
@@ -209,6 +200,7 @@ async function obtenerDireccionPedido(idPedido) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "69420",
                 'Authorization': `Bearer ${token}`
             }
         });
@@ -262,6 +254,7 @@ function cerrarModal() {
     }
 }
 
+
 if (proceedToPaymentButton) {
     proceedToPaymentButton.addEventListener('click', async () => {
         // Mostrar la pantalla de carga
@@ -271,10 +264,6 @@ if (proceedToPaymentButton) {
         const pedidoId = pedidoSeleccionado.idPedido;
         const detallesPedido = pedidoSeleccionado.detalles;
         const totalPedido = pedidoSeleccionado.total;
-
-        console.log('pedidoSeleccionado:', pedidoSeleccionado);
-        console.log('idPedido:', pedidoId);
-        console.log('Detalles del pedido:', detallesPedido);
 
         // Cerrar el modal
         cerrarModal();
@@ -291,10 +280,12 @@ if (proceedToPaymentButton) {
         }
 
         try {
-            const response = await fetch(`../../crear_preferencia.php`, {
+            const response = await fetch(`${API_BASE_URL}/api/payment/preference`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     idPedido: pedidoId,
@@ -304,15 +295,11 @@ if (proceedToPaymentButton) {
                 })
             });
 
-            // Leer el texto de la respuesta
-            const responseText = await response.text();
-            console.log('Respuesta del servidor:', responseText);
-
-            // Intentar parsear el JSON
-            const data = JSON.parse(responseText);
+            // Leer la respuesta del servidor
+            const data = await response.json();
 
             if (data.success) {
-                // Redirigir a la URL de Mercado Pago en la misma pestaña
+                // Redirigir al usuario al punto de inicio de pago de MercadoPago
                 window.location.href = data.init_point;
             } else {
                 hideLoadingScreen();
@@ -441,6 +428,31 @@ if (cancelPaymentButton) cancelPaymentButton.addEventListener('click', cerrarMod
 document.addEventListener('DOMContentLoaded', fetchPedidos);
 
 
+export function showLoadingScreen() {
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.display = 'flex';
+    }
+}
+
+export function hideLoadingScreen() {
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.display = 'none';
+    }
+}
+
+// Función para mostrar notificaciones
+export function showNotification(message, bgColor) {
+    if (!notification) return;
+    notification.textContent = message;
+    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md`;
+    notification.style.display = "block";
+
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 5000);
+}
 
 // Asignar eventos de cierre al botón de cierre del modal de estado
 const closeEstadoModalButton = document.getElementById('closeEstadoModal');

@@ -84,7 +84,8 @@ document.getElementById('direccionForm').addEventListener('submit', async functi
         const response = await fetch(`${API_BASE_URL}/api/agregarDireccion`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                "ngrok-skip-browser-warning": "69420",
             },
             body: formData
         });

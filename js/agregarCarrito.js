@@ -89,6 +89,7 @@ export async function agregarAlCarrito() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "69420",
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({

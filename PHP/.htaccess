@@ -4,13 +4,19 @@ Options -Indexes
 # Habilitar el módulo de reescritura de URLs
 RewriteEngine On
 
-# Excluir redirección para las rutas con parámetros de Mercado Pago
-RewriteCond %{QUERY_STRING} (^|&)status=(approved|failure|pending)($|&)
-RewriteCond %{QUERY_STRING} (^|&)external_reference=.*($|&)
-RewriteCond %{QUERY_STRING} (^|&)payment_type=.*($|&)
+# Excluir redirección para las rutas con parámetros de MercadoPago
+RewriteCond %{QUERY_STRING} (^|&)status=(approved|failure|pending)($|&) [NC]
+RewriteCond %{QUERY_STRING} (^|&)external_reference=.*($|&) [NC]
+RewriteCond %{QUERY_STRING} (^|&)payment_type=.*($|&) [NC]
 RewriteRule ^ - [L]
 
 # Si intenta acceder a ADMINPHP o CLIENTEPHP sin token JWT, redirige a index.php
+# Esta regla se aplica solo si no contiene los parámetros de MercadoPago en la query string
 RewriteCond %{REQUEST_URI} ^/PHP/(ADMINPHP|CLIENTEPHP)/ [NC]
 RewriteCond %{HTTP_COOKIE} !jwt=.+ [NC]
+RewriteCond %{QUERY_STRING} !(^|&)status=(approved|failure|pending)($|&) [NC]
+RewriteCond %{QUERY_STRING} !(^|&)external_reference=.*($|&) [NC]
+RewriteCond %{QUERY_STRING} !(^|&)payment_type=.*($|&) [NC]
 RewriteRule ^ /index.php [R=302,L]
+
+# Otras reglas personalizadas, si las necesitas.
