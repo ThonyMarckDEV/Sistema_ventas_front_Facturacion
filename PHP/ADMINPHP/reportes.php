@@ -40,18 +40,30 @@
                 <canvas id="ventasChart"></canvas>
             </div>
             <div class="bg-white p-3 rounded-lg shadow chart-container">
+                <h3>Pagos Completados</h3>
                 <canvas id="pagosCompletadosChart"></canvas>
             </div>
             <div class="bg-white p-3 rounded-lg shadow chart-container">
+                <h3>Ingresos por Mes</h3>
+                <canvas id="ingresosPorMesChart"></canvas>
+            </div>
+            <div class="bg-white p-3 rounded-lg shadow chart-container">
+                <h3>Pedidos Completados</h3>
                 <canvas id="pedidosChart"></canvas>
             </div>
             <div class="bg-white p-3 rounded-lg shadow chart-container">
+                <h3>Pedidos por Mes</h3>
+                <canvas id="pedidosPorMesChart"></canvas>
+            </div>
+            <div class="bg-white p-3 rounded-lg shadow chart-container">
+                <h3>Cantidad Total de Clientes</h3>
                 <canvas id="clientesChart"></canvas>
             </div>
             <div class="bg-white p-3 rounded-lg shadow chart-container">
                 <canvas id="productosChart"></canvas>
             </div>
             <div class="bg-white p-3 rounded-lg shadow chart-container">
+                <h3>Productos Stock < 10</h3>
                 <canvas id="bajoStockChart"></canvas>
             </div>
             
