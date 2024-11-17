@@ -1,0 +1,57 @@
+# Bloquear acceso directo al listado de directorios
+Options -Indexes
+
+# Habilitar el módulo de reescritura de URLs
+RewriteEngine On
+
+# Permitir acceso a archivos específicos en esta carpeta
+
+# LOGIN JS
+RewriteCond %{REQUEST_URI} !/login.js$ [NC]
+RewriteCond %{REQUEST_URI} !/register.js$ [NC]
+RewriteCond %{REQUEST_URI} !/urlHelper.js$ [NC]
+RewriteCond %{REQUEST_URI} !/logout.js$ [NC]
+
+# CLIENTEJS
+RewriteCond %{REQUEST_URI} !/perfilCliente.js$ [NC]
+RewriteCond %{REQUEST_URI} !/listarProductosCliente.js$ [NC]
+RewriteCond %{REQUEST_URI} !/registerUser.js$ [NC]
+RewriteCond %{REQUEST_URI} !/gestionarProductosCarrito.js$ [NC]
+RewriteCond %{REQUEST_URI} !/agregarCarrito.js$ [NC]
+RewriteCond %{REQUEST_URI} !/proceedToCheckout.js$ [NC]
+RewriteCond %{REQUEST_URI} !/pedido.js$ [NC]
+RewriteCond %{REQUEST_URI} !/contadorCarrito.js$ [NC]
+RewriteCond %{REQUEST_URI} !/contadorPedidos.js$ [NC]
+RewriteCond %{REQUEST_URI} !/agregarDireccion.js$ [NC]
+RewriteCond %{REQUEST_URI} !/gestionarDirecciones.js$ [NC]
+
+
+# ADMINJS
+RewriteCond %{REQUEST_URI} !/loadingOverlay.js$ [NC]
+RewriteCond %{REQUEST_URI} !/gestionarUsuarios.js$ [NC]
+RewriteCond %{REQUEST_URI} !/register.js$ [NC]
+RewriteCond %{REQUEST_URI} !/gestionarProductos.js$ [NC]
+RewriteCond %{REQUEST_URI} !/gestionarCategorias.js$ [NC]
+RewriteCond %{REQUEST_URI} !/pedidosAdmin.js$ [NC]
+RewriteCond %{REQUEST_URI} !/reportes.js$ [NC]
+RewriteCond %{REQUEST_URI} !/contadorPedidosAdmin.js$ [NC]
+
+
+# AUTH JS
+RewriteCond %{REQUEST_URI} !/checkRoleandtokenInterval.js$ [NC]
+RewriteCond %{REQUEST_URI} !/checkStorageTokenINDEX.js$ [NC]
+RewriteCond %{REQUEST_URI} !/lastActivity.js$ [NC]
+RewriteCond %{REQUEST_URI} !/sessionManager.js$ [NC]
+RewriteCond %{REQUEST_URI} !/checkInactivity.js$ [NC]
+RewriteCond %{REQUEST_URI} !/click-sound.js$ [NC]
+RewriteCond %{REQUEST_URI} !/typing-sound.js$ [NC]
+RewriteCond %{REQUEST_URI} !/loader.js$ [NC]
+RewriteCond %{REQUEST_URI} !/authToken.js$ [NC]
+RewriteCond %{REQUEST_URI} !/reset-password.js$ [NC]
+
+
+#PAGOS
+RewriteCond %{REQUEST_URI} !/procesar_pago.js$ [NC]
+
+# Redirigir todas las demás solicitudes a /index.php
+RewriteRule ^.*$ /index.php [L,R=302]
