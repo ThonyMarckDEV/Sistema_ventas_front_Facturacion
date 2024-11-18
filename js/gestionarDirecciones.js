@@ -48,6 +48,8 @@ async function loadDirecciones() {
 
         if (!response.ok) {
             const errorData = await response.json();
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
             console.error('Error al cargar las direcciones:', errorData.message || 'Error desconocido');
             return;
         }
@@ -142,40 +144,55 @@ async function setUsando(idDireccion) {
 async function eliminarDireccion(idDireccion) {
     await verificarYRenovarToken();
 
-    // Mostrar el loader al enviar el formulario
+    // Mostrar el loader al enviar la solicitud
     document.getElementById("loadingScreen").classList.remove("hidden");
 
-    const response = await fetch(`${API_BASE_URL}/api/eliminarDireccion/${idDireccion}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/eliminarDireccion/${idDireccion}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
+            }
+        });
+
+        // Leer la respuesta JSON
+        const data = await response.json();
+
+        if (response.ok) {
+            // Acción exitosa
+            loadDirecciones();
+
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
+
+            // Reproducir el sonido de éxito
+            const sonido = new Audio('../../songs/success.mp3');
+            sonido.play().catch((error) => {
+                console.error("Error al reproducir el sonido de éxito:", error);
+            });
+
+            // Mostrar la notificación de éxito
+            showNotification(data.message || "Dirección eliminada exitosamente", "bg-green-500");
+        } else {
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
+            // Manejo de errores del servidor
+            throw new Error(data.message || "Error desconocido del servidor");
         }
-    });
+    } catch (error) {
+        // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
 
-    if (response.ok) {
-       
-        loadDirecciones();
-         // // Ocultar el loader después de la operación
-         document.getElementById("loadingScreen").classList.add("hidden");
-          // Reproducir el sonido success
-        var sonido = new Audio('../../songs/success.mp3'); 
-        sonido.play().catch(function(error) {
-            console.error("Error al reproducir el sonido:", error);
+        // Reproducir el sonido de error
+        const sonido = new Audio('../../songs/error.mp3');
+        sonido.play().catch((error) => {
+            console.error("Error al reproducir el sonido de error:", error);
         });
-        showNotification("Direccion eliminada exitosamente", "bg-green-500");
-    }else{
-         // // Ocultar el loader después de la operación
-         document.getElementById("loadingScreen").classList.add("hidden");
-          // Reproducir el sonido error
-        var sonido = new Audio('../../songs/error.mp3'); 
-        sonido.play().catch(function(error) {
-            console.error("Error al reproducir el sonido:", error);
-        });
-        showNotification("Error al eliminar direccion", "bg-red-500");
+
+        // Mostrar la notificación de error con el mensaje recibido
+        showNotification(error.message || "Error al eliminar la dirección", "bg-red-500");
     }
-
-
 }
 
    // Mostrar notificación
