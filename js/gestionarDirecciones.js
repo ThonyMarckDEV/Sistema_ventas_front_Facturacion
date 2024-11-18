@@ -106,6 +106,9 @@ function closeMapModal() {
 async function setUsando(idDireccion) {
     await verificarYRenovarToken();
 
+    // Mostrar el loader al enviar el formulario
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     const response = await fetch(`${API_BASE_URL}/api/setDireccionUsando/${idDireccion}`, {
         method: 'PUT',
         headers: {
@@ -115,13 +118,32 @@ async function setUsando(idDireccion) {
     });
 
     if (response.ok) {
-        alert("Dirección establecida como 'usando'");
         loadDirecciones();
+         // // Ocultar el loader después de la operación
+         document.getElementById("loadingScreen").classList.add("hidden");
+          // Reproducir el sonido success
+           var sonido = new Audio('../../songs/success.mp3'); 
+             sonido.play().catch(function(error) {
+             console.error("Error al reproducir el sonido:", error);
+            });
+            showNotification("Direccion establecida como predeterminada exitosamente", "bg-green-500");
+    }else{
+         // // Ocultar el loader después de la operación
+         document.getElementById("loadingScreen").classList.add("hidden");
+          // Reproducir el sonido error
+          var sonido = new Audio('../../songs/error.mp3'); 
+          sonido.play().catch(function(error) {
+              console.error("Error al reproducir el sonido:", error);
+          });
+          showNotification("Error al establecer direccion como predeterminada", "bg-red-500");
     }
 }
 
 async function eliminarDireccion(idDireccion) {
     await verificarYRenovarToken();
+
+    // Mostrar el loader al enviar el formulario
+    document.getElementById("loadingScreen").classList.remove("hidden");
 
     const response = await fetch(`${API_BASE_URL}/api/eliminarDireccion/${idDireccion}`, {
         method: 'DELETE',
@@ -132,9 +154,39 @@ async function eliminarDireccion(idDireccion) {
     });
 
     if (response.ok) {
-        alert("Dirección eliminada");
+       
         loadDirecciones();
+         // // Ocultar el loader después de la operación
+         document.getElementById("loadingScreen").classList.add("hidden");
+          // Reproducir el sonido success
+        var sonido = new Audio('../../songs/success.mp3'); 
+        sonido.play().catch(function(error) {
+            console.error("Error al reproducir el sonido:", error);
+        });
+        showNotification("Direccion eliminada exitosamente", "bg-green-500");
+    }else{
+         // // Ocultar el loader después de la operación
+         document.getElementById("loadingScreen").classList.add("hidden");
+          // Reproducir el sonido error
+        var sonido = new Audio('../../songs/error.mp3'); 
+        sonido.play().catch(function(error) {
+            console.error("Error al reproducir el sonido:", error);
+        });
+        showNotification("Error al eliminar direccion", "bg-red-500");
     }
+
+
+}
+
+   // Mostrar notificación
+   function showNotification(message, bgColor) {
+    const notification = document.getElementById("notification");
+    notification.textContent = message;
+    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md`;
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 5000);
 }
 
 // Cargar las direcciones al cargar la página

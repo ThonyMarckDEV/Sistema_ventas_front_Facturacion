@@ -18,8 +18,9 @@ function parseJwt(token) {
 document.addEventListener('DOMContentLoaded', function () {
     let map, marker;
 
-    // Posición inicial (Lima, Perú)
-    const initialPosition = [-12.0464, -77.0428];
+    // Posición inicial por defecto
+    const defaultPosition = [-12.0464, -77.0428];
+    let initialPosition = defaultPosition; // Se actualizará con la ubicación del dispositivo si está disponible.
 
     // Inicializar el mapa
     map = L.map('map').setView(initialPosition, 13);
@@ -38,41 +39,52 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('longitud').value = position.lng;
     });
 
-    // Intentar obtener la ubicación del usuario
+    // Intentar obtener la ubicación del dispositivo
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const userPosition = [position.coords.latitude, position.coords.longitude];
+                initialPosition = userPosition;
                 map.setView(userPosition, 13);
                 marker.setLatLng(userPosition);
                 document.getElementById('latitud').value = userPosition[0];
                 document.getElementById('longitud').value = userPosition[1];
             },
             () => {
-                alert('No se pudo obtener la ubicación. Usa el marcador manualmente.');
+                alert('No se pudo obtener la ubicación del dispositivo. Usa el marcador manualmente.');
+                document.getElementById('latitud').value = defaultPosition[0];
+                document.getElementById('longitud').value = defaultPosition[1];
             }
         );
+    } else {
+        alert('Geolocalización no soportada. Usa el marcador manualmente.');
+        document.getElementById('latitud').value = defaultPosition[0];
+        document.getElementById('longitud').value = defaultPosition[1];
     }
 
+    // Manejar el envío del formulario
     document.getElementById('direccionForm').addEventListener('submit', async function (e) {
         e.preventDefault();
-    
+
         await verificarYRenovarToken();
-    
+
         const token = localStorage.getItem("jwt");
         const decoded = parseJwt(token);
-    
+
         if (!decoded || !decoded.idUsuario) {
             alert("No se pudo obtener el ID del usuario desde el token. Inicia sesión nuevamente.");
             return;
         }
-    
+
         const idUsuario = decoded.idUsuario; // ID del usuario desde el token
         const formData = new FormData(e.target);
         formData.set('latitud', document.getElementById('latitud').value);
         formData.set('longitud', document.getElementById('longitud').value);
         formData.set('idUsuario', idUsuario); // Agregar idUsuario al formData
-    
+
+        // Mostrar el loader al enviar el formulario
+        document.getElementById("loadingScreen").classList.remove("hidden");
+
         try {
             const response = await fetch(`${API_BASE_URL}/api/agregarDireccion`, {
                 method: 'POST',
@@ -81,23 +93,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: formData
             });
-    
+
             if (!response.ok) {
                 throw new Error('Error al enviar los datos');
             }
-    
+            // Reproducir el sonido success
+            var sonido = new Audio('../../songs/success.mp3'); 
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
+            showNotification("Direccion agregada exitosamente", "bg-green-500");
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
+
             const data = await response.json();
-            alert('Dirección agregada con éxito');
             console.log(data);
-    
-            // Restablecer el formulario
             resetForm();
-    
+
         } catch (error) {
-            console.error('Error:', error);
-            alert('No se pudo agregar la dirección');
+             // Reproducir el sonido error
+             var sonido = new Audio('../../songs/error.mp3'); 
+             sonido.play().catch(function(error) {
+                 console.error("Error al reproducir el sonido:", error);
+             });
+             showNotification("Error al agregar direccion ", "bg-red-500");
+            document.getElementById("loadingScreen").classList.add("hidden");
         }
     });
+
 
     function resetForm() {
         document.getElementById('direccionForm').reset();
@@ -106,4 +129,17 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('latitud').value = initialPosition[0];
         document.getElementById('longitud').value = initialPosition[1];
     }
+
+    // Mostrar notificación
+    function showNotification(message, bgColor) {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md`;
+        notification.style.display = "block";
+        setTimeout(() => {
+            notification.style.display = "none";
+        }, 5000);
+    }
+
+
 });

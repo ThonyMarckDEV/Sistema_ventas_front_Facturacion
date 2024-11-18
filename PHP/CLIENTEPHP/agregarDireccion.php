@@ -9,10 +9,18 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <style>
-        #map {
+         #map {
             width: 100%;
             height: 300px;
             border-radius: 8px;
+            z-index: 10;
+        }
+
+
+        @media (max-width: 768px) {
+            #map {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -60,9 +68,13 @@
                         <input type="text" name="direccion" class="w-full p-2 border rounded" required>
                     </div>
 
-                    <div id="map" class="mb-4"></div>
-                    <input type="hidden" name="latitud" id="latitud">
-                    <input type="hidden" name="longitud" id="longitud">
+                     <!-- Contenedor del mapa -->
+                     <div>
+                        <label class="block text-gray-700 mb-2">Ubicación:</label>
+                        <div id="map" class="mb-4"></div>
+                        <input type="hidden" name="latitud" id="latitud">
+                        <input type="hidden" name="longitud" id="longitud">
+                    </div>
 
                     <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Agregar Dirección</button>
                 </form>

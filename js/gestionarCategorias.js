@@ -4,6 +4,7 @@ import { verificarYRenovarToken } from './authToken.js';
 
 const token = localStorage.getItem("jwt");
 let categories = []; // Variable global para almacenar las categorías cargadas
+
 // Mostrar notificación
 function showNotification(message, bgColor) {
     const notification = document.getElementById("notification");
@@ -42,9 +43,9 @@ async function submitCategoryForm() {
             sonido.play().catch(function(error) {
                 console.error("Error al reproducir el sonido:", error);
             });
+            showNotification("Categoría agregada exitosamente", "bg-green-500");
             // Ocultar el loader después de la operación
             document.getElementById("loadingScreen").classList.add("hidden");
-            showNotification("Categoría agregada exitosamente", "bg-green-500");
             form.reset();
             listCategories(); // Actualiza la lista de categorías
         } else {
