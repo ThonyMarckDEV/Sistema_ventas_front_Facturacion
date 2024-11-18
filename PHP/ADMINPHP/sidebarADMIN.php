@@ -120,10 +120,10 @@
 
 <!-- Overlay de Carga Fijo -->
 <div id="loadingOverlay" class="fixed inset-0 flex items-center justify-center bg-white hidden z-50" style="width: 100vw; height: 100vh;">
-        <img src="../../img/carga.gif" alt="Cargando..." class="w-20 h-20"> <!-- Tamaño fijo del GIF -->
+        <img src="../../img/carga.gif" alt="Cargando..." class="w-20 h-20">
 </div>
 
-<script src="../../js/loadingOverlay.js"></script>
+<!-- <script src="../../js/loadingOverlay.js"></script> -->
 <!-- Incluir el script de autenticación y el script para el botón de menú -->
 <script type="module" src="../../js/checkRoleandtokenInterval.js"></script>
 <!-- Script para manejar el cierre de sesión -->

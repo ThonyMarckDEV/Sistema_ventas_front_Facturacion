@@ -1,14 +1,28 @@
 import API_BASE_URL from './urlHelper.js';
 import { verificarYRenovarToken } from './authToken.js';
 
-// Obtener el token JWT desde localStorage
 const token = localStorage.getItem('jwt');
 
-// Función para cargar datos de la API con autenticación
-async function fetchData(endpoint) {
-    // Verificar y renovar el token antes de cualquier solicitud
-    await verificarYRenovarToken();
+// Mostrar spinner
+function showLoading() {
+    document.getElementById('loadingSpinner').classList.remove('hidden');
+}
 
+// Ocultar spinner
+function hideLoading() {
+    document.getElementById('loadingSpinner').classList.add('hidden');
+}
+
+// Ajustar gráficos para móviles
+function adjustMobileLayout() {
+    const chartContainers = document.querySelectorAll('.chart-container');
+    chartContainers.forEach(container => {
+        container.classList.add('overflow-x-auto', 'sm:overflow-visible');
+    });
+}
+
+// Llamar a showLoading antes de cargar los datos
+async function fetchData(endpoint) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
             method: 'GET',
@@ -17,16 +31,17 @@ async function fetchData(endpoint) {
                 'Content-Type': 'application/json',
             },
         });
+
         if (!response.ok) {
             throw new Error(`Error en la solicitud a ${endpoint}: ${response.statusText}`);
         }
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
         console.error("Error al cargar los datos:", error);
-        showNotification("Error al cargar los datos de reportes.", "bg-red-500");
+        showNotification("Error al cargar los datos.", "bg-red-500");
     }
 }
+
 
 // Función para cargar datos de la cantidad de pedidos por mes
 async function fetchPedidosPorMes() {
@@ -46,18 +61,13 @@ async function fetchCantidadPagosCompletados() {
     return response.cantidadPagosCompletados;
 }
 
-// Generar los gráficos
+// Generar gráficos
 async function generarReportes() {
+    showLoading();
     try {
-        // Verificar y renovar el token antes de cualquier solicitud
-        await verificarYRenovarToken();
-
-        // Obtener las etiquetas de los meses
         const etiquetasMeses = obtenerEtiquetasMeses();
-
-        // Cargar datos desde las APIs
-        const pedidosMesData = await fetchPedidosPorMes();
-        const ingresosMesData = await fetchIngresosPorMes();
+        const pedidosMesData = await fetchData('reportes/pedidos-por-mes');
+        const ingresosMesData = await fetchData('reportes/ingresos-por-mes');
 
         // Alinear datos con los meses
         const datosPedidosPorMes = alinearDatosPorMes(pedidosMesData, 'cantidad');
@@ -176,9 +186,8 @@ async function generarReportes() {
             },
         });
 
-    } catch (error) {
-        console.error("Error al generar los reportes:", error);
-        showNotification("Error al generar los reportes.", "bg-red-500");
+    } finally {
+        hideLoading();
     }
 }
 
@@ -213,5 +222,8 @@ function showNotification(message, bgColor) {
     }, 5000);
 }
 
-// Llamar a la función para generar reportes
-generarReportes();
+// Inicia ajustes móviles y generación de reportes
+window.addEventListener('DOMContentLoaded', () => {
+    adjustMobileLayout();
+    generarReportes();
+});

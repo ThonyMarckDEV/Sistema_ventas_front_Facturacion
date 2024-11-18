@@ -14,6 +14,9 @@ export async function listUsers() {
     // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
 
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/listarUsuarios`, {
         method: "GET",
         headers: {
@@ -47,7 +50,10 @@ export async function listUsers() {
     .catch(error => {
         console.error("Error al cargar usuarios:", error);
         showNotification("Error en la solicitud", "bg-red-500");
-    });
+    }).finally(()=>{
+        // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
+   });
 }
 
 // Función para renderizar la tabla de usuarios
@@ -120,11 +126,10 @@ async function deleteUser(userId) {
     .catch(
         error => console.error("Error al eliminar usuario:", error
 
-    ))
-    .finally(()=>{
+    )).finally(()=>{
         // Ocultar el loader después de la operación
         document.getElementById("loadingScreen").classList.add("hidden");
-   });;
+   });
 }
 
 // Función para actualizar usuario con token

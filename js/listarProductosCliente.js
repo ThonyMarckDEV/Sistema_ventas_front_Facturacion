@@ -3,6 +3,8 @@ import { agregarAlCarrito  } from './agregarCarrito.js';
 
 import { verificarYRenovarToken } from './authToken.js';
 
+const token = localStorage.getItem("jwt"); 
+
 document.addEventListener("DOMContentLoaded", () => {
     fetchProductos();
 });
@@ -12,7 +14,9 @@ async function fetchProductos() {
     // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
 
-    const token = localStorage.getItem("jwt"); 
+ 
+ // Mostrar el loader al enviar el formulario
+ document.getElementById("loadingScreen").classList.remove("hidden");
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/productos`, {
@@ -28,9 +32,14 @@ async function fetchProductos() {
             throw new Error("Error al cargar productos");
         }
 
+        // // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
+        
         const data = await response.json();
         displayProductos(data.data);
     } catch (error) {
+        // // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
         console.error("Error al cargar productos:", error);
     }
 }

@@ -12,6 +12,9 @@ async function loadCategories() {
     // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
 
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/listarCategorias`, {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -36,7 +39,13 @@ async function loadCategories() {
             categorySelect.appendChild(option);
         });
     })
-    .catch(error => console.error("Error al cargar categorías:", error));
+    .catch(
+        error => console.error("Error al cargar categorías:", error
+
+    )).finally(()=>{
+        // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
+   });
 }
 
 // Función para listar productos

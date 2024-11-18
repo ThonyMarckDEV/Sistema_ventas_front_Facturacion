@@ -34,6 +34,9 @@ async function loadClienteData() {
     // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
 
+     // Mostrar el loader al enviar el formulario
+     document.getElementById("loadingScreen").classList.remove("hidden");
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/perfilCliente`, {
             method: "GET",
@@ -49,6 +52,8 @@ async function loadClienteData() {
         }
 
         const data = await response.json();
+        //quitr loader
+        document.getElementById("loadingScreen").classList.add("hidden");
         
         // Imprimir la URL de la imagen para verificar
         console.log("URL de la imagen de perfil:", data.data.perfil);
@@ -69,6 +74,8 @@ async function loadClienteData() {
         document.getElementById("profileImage").src = data.data.perfil || '../../img/default-profile.jpg';
     } catch (error) {
         console.error("Error al cargar datos del docente:", error);
+        //quitr loader
+        document.getElementById("loadingScreen").classList.add("hidden");
     }
 }
 

@@ -122,6 +122,7 @@ export async function agregarAlCarrito() {
         alert("Error al agregar producto al carrito");
         hideModal(); // Cerrar el modal en caso de error en el frontend
     } finally {
+        //Quitar loader carga
         document.getElementById("loadingScreen").classList.add("hidden");
     }
 }

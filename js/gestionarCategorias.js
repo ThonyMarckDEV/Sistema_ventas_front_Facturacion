@@ -66,6 +66,9 @@ async function listCategories() {
     // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
 
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/listarCategorias`, {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -76,7 +79,13 @@ async function listCategories() {
         categories = data.data; // Almacena las categorías en la variable global
         renderCategoryTable(categories);
     })
-    .catch(error => console.error("Error al cargar categorías:", error));
+    .catch(
+        error => console.error("Error al cargar categorías:", error
+
+    )).finally(()=>{
+        // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
+   });
 }
 
 function renderCategoryTable(categories) {

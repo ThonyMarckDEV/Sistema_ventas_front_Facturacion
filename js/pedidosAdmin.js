@@ -78,6 +78,9 @@ async function fetchPedidos() {
     // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
 
+    //Mostrar Pantalla Carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/admin/pedidos`, {
             method: 'GET',
@@ -90,11 +93,17 @@ async function fetchPedidos() {
 
         if (data.success) {
             renderPedidos(data.orders);
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
         } else {
             showNotification(data.message, 'bg-red-500');
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
         }
     } catch (error) {
         console.error('Error al obtener los pedidos:', error);
+         // Ocultar el loader después de la operación
+         document.getElementById("loadingScreen").classList.add("hidden");
         showNotification('Error al obtener los pedidos. Intenta nuevamente.', 'bg-red-500');
     }
 }

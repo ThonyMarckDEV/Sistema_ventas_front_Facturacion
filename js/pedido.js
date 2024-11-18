@@ -10,8 +10,6 @@ const token = localStorage.getItem('jwt');
 let idUsuario = null;
 
 
-
-
 function decodeJWT(token) {
     try {
         const payloadBase64 = token.split('.')[1];
@@ -58,6 +56,9 @@ export async function fetchPedidos() {
         return;
     }
 
+    // Mostrar el loader al enviar el formulario
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/pedidos/${idUsuario}`, {
             method: 'GET',
@@ -71,12 +72,18 @@ export async function fetchPedidos() {
 
         if (data.success) {
             renderPedidos(data.pedidos);
+             // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
         } else {
+             // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
             showNotification(data.message, 'bg-red-500');
         }
     } catch (error) {
         console.error('Error al obtener los pedidos:', error);
         showNotification('Error al obtener los pedidos. Intenta nuevamente.', 'bg-red-500');
+         // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
     }
 }
 

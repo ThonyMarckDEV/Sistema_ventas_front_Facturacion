@@ -34,6 +34,9 @@ async function loadDirecciones() {
         return;
     }
 
+        // Mostrar el loader al enviar el formulario
+        document.getElementById("loadingScreen").classList.remove("hidden");
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/listarDireccion/${idUsuario}`, {
             method: 'GET',
@@ -48,6 +51,8 @@ async function loadDirecciones() {
             console.error('Error al cargar las direcciones:', errorData.message || 'Error desconocido');
             return;
         }
+         // // Ocultar el loader después de la operación
+         document.getElementById("loadingScreen").classList.add("hidden");
 
         const direcciones = await response.json();
         console.log('Direcciones recibidas:', direcciones);
@@ -71,6 +76,8 @@ async function loadDirecciones() {
             tableBody.appendChild(row);
         });
     } catch (error) {
+         // // Ocultar el loader después de la operación
+         document.getElementById("loadingScreen").classList.add("hidden");
         console.error('Error al realizar la solicitud:', error);
     }
 }
