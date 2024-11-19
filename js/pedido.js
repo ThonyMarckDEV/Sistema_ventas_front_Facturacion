@@ -199,10 +199,10 @@ async function cancelarPedido(idPedido) {
 // Función para obtener la dirección del pedido
 async function obtenerDireccionPedido(idPedido) {
 
+    try {
         // Verificar y renovar el token antes de cualquier solicitud
         await verificarYRenovarToken();
 
-    try {
         const response = await fetch(`${API_BASE_URL}/api/obtenerDireccionPedidoUser/${idPedido}`, {
             method: 'GET',
             headers: {
@@ -262,18 +262,21 @@ function cerrarModal() {
 }
 
 
+// Inicializar Mercado Pago con tu clave pública
+const mercadopago = new MercadoPago('TEST-75c3d6ce-fc69-4586-9056-e98a32568883', {
+    locale: 'es-PE' // Cambia a tu región si es necesario
+});
+
+
 if (proceedToPaymentButton) {
     proceedToPaymentButton.addEventListener('click', async () => {
         // Mostrar la pantalla de carga
         showLoadingScreen();
 
-        // Obtener detalles del pedido antes de cerrar el modal
+        // Obtener detalles del pedido
         const pedidoId = pedidoSeleccionado.idPedido;
         const detallesPedido = pedidoSeleccionado.detalles;
         const totalPedido = pedidoSeleccionado.total;
-
-        // Cerrar el modal
-        cerrarModal();
 
         // Obtener el correo del usuario desde el token JWT
         const token = localStorage.getItem('jwt');
@@ -291,7 +294,6 @@ if (proceedToPaymentButton) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    "ngrok-skip-browser-warning": "69420",
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
@@ -302,12 +304,19 @@ if (proceedToPaymentButton) {
                 })
             });
 
-            // Leer la respuesta del servidor
             const data = await response.json();
 
             if (data.success) {
-                // Redirigir al usuario al punto de inicio de pago de MercadoPago
-                window.location.href = data.init_point;
+                // Esconde la pantalla de carga
+                hideLoadingScreen();
+
+                // Usa el SDK de Mercado Pago para abrir el modal
+                mercadopago.checkout({
+                    preference: {
+                        id: data.preference_id // Usar el ID de la preferencia desde el back-end
+                    },
+                    autoOpen: true // Abre el modal automáticamente
+                });
             } else {
                 hideLoadingScreen();
                 showNotification(data.message || 'Error al crear la preferencia de pago.', 'bg-red-500');
@@ -319,7 +328,6 @@ if (proceedToPaymentButton) {
         }
     });
 }
-
 
 // También permite cerrar el modal con la tecla "Escape"
 document.addEventListener('keydown', (event) => {

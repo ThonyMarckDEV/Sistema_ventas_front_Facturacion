@@ -44,7 +44,7 @@ function cerrarSesionPorInactividad() {
 // Incrementar el tiempo de inactividad y mostrar el modal si llega a 30 segundos
 setInterval(() => {
     tiempoInactividad += 1;
-    if (tiempoInactividad >= 120 && !modalMostrado) {
+    if (tiempoInactividad >= 300 && !modalMostrado) { //CADA 5 MINUTOS
         mostrarModal(); // Mostrar el modal después de 30 segundos de inactividad
     }
 }, 1000); // Incrementa cada segundo

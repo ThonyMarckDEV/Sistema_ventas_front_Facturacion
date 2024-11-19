@@ -135,6 +135,6 @@
 <!-- Incluir el Modal de Inactividad -->
 <?php include '../inactivity.php'; ?>
 <!-- <script Checka inactyividad Usuario></script> -->
-<!-- <script type="module" src="../../js/checkInactivity.js"></script> -->
+<script type="module" src="../../js/checkInactivity.js"></script>
 <script type="module" src="../../js/contadorCarrito.js"></script>
 <script type="module" src="../../js/contadorPedidos.js"></script>

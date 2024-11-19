@@ -30,7 +30,6 @@
             fetchPedidos();
         });
     </script>
-
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col lg:flex-row">
 
@@ -130,7 +129,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Script para cargar pedidos -->
     <script type="module" src="../../js/pedido.js"></script>
 
