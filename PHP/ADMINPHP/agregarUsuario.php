@@ -29,6 +29,7 @@
            <!-- Formulario -->
            <form id="userForm" class="bg-white p-4 sm:p-6 rounded-lg shadow-md space-y-4 w-full md:w-auto sm:mx-auto"> <!-- Tamaño más pequeño en móviles -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                
                <!-- Username (solo lectura) -->
                 <div>
                     <label for="username" class="block text-gray-700 font-semibold">Nombre de Usuario</label>
@@ -51,39 +52,66 @@
                     <input type="text" id="nombres" name="nombres" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
-                <!-- Apellidos -->
+                 <!-- Apellidos (Obligatorio) -->
                 <div>
-                    <label for="apellidos" class="block text-gray-700 font-semibold">Apellidos</label>
-                    <input type="text" id="apellidos" name="apellidos" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="apellidos" class="block text-gray-700 font-semibold">Apellidos <span class="text-red-500">*</span></label>
+                    <input 
+                        type="text" 
+                        id="apellidos" 
+                        name="apellidos" 
+                        required 
+                        pattern="^[a-zA-ZÀ-ÿ]+(\s[a-zA-ZÀ-ÿ]+)+$" 
+                        title="Debe ingresar dos apellidos separados por un espacio" 
+                        class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
                 </div>
 
-               <!-- DNI -->
+              
+                <!-- DNI (Obligatorio) -->
                 <div>
-                    <label for="dni" class="block text-gray-700 font-semibold">DNI</label>
-                    <input type="text" id="dni" name="dni" maxlength="8" required 
-                        pattern="\d{8}" 
-                        title="Ingrese un DNI de 8 dígitos"
-                        class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
+                        <label for="dni" class="block text-gray-700 font-semibold">DNI <span class="text-red-500">*</span></label>
+                        <input 
+                            type="text" 
+                            id="dni" 
+                            name="dni" 
+                            maxlength="8" 
+                            required 
+                            pattern="\d{8}" 
+                            class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                        >
+                    </div>
 
-                <!-- Correo -->
-                <div>
-                    <label for="correo" class="block text-gray-700 font-semibold">Correo</label>
-                    <input type="email" id="correo" name="correo" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                 <!-- Edad -->
-                 <div>
-                    <label for="edad" class="block text-gray-700 font-semibold">Edad</label>
-                    <input type="number" id="edad" name="edad" required min="1" max="120"
-                        class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
+                    <!-- Correo (Obligatorio) -->
+                    <div>
+                        <label for="correo" class="block text-gray-700 font-semibold">Correo <span class="text-red-500">*</span></label>
+                        <input type="email" id="correo" name="correo" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                <!-- Edad (Opcional) -->
+                    <div>
+                        <label for="edad" class="block text-gray-700 font-semibold">Edad <span class="text-gray-500">(Opcional)</span></label>
+                        <input 
+                            type="text" 
+                            id="edad" 
+                            name="edad" 
+                            maxlength="3" 
+                            class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                        >
+                    </div>
+
                <!-- Teléfono -->
                 <div>
-                    <label for="telefono" class="block text-gray-700 font-semibold">Teléfono</label>
-                    <input type="text" id="telefono" name="telefono" maxlength="9" required 
-                        pattern="\d{9}" 
-                        title="Ingrese un número de teléfono de 9 dígitos"
-                        class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="telefono" class="block text-gray-700 font-semibold">Telefono <span class="text-gray-500">(Opcional)</span></label>
+                        <input 
+                            type="text" 
+                            id="telefono" 
+                             name="telefono" 
+                            maxlength="9" 
+                            class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                        >
                 </div>
 
                 <!-- Departamento -->
@@ -119,16 +147,31 @@
                     </select>
                 </div>
 
-                <!-- Contraseña -->
+               <!-- Contraseña -->
                 <div>
-                    <label for="password" class="block text-gray-700 font-semibold">Contraseña</label>
-                    <input type="password" id="password" name="password" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="password" class="block text-gray-700 font-semibold">Contraseña <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" required minlength="8" 
+                            title="La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula y un símbolo"
+                            class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button type="button" onclick="togglePasswordVisibility('password')" 
+                            class="absolute inset-y-0 right-0 px-3 text-gray-600 focus:outline-none">
+                            👁️
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Confirmar Contraseña -->
                 <div>
-                    <label for="password_confirmation" class="block text-gray-700 font-semibold">Confirmar Contraseña</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="password_confirmation" class="block text-gray-700 font-semibold">Confirmar Contraseña <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8" 
+                            class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button type="button" onclick="togglePasswordVisibility('password_confirmation')" 
+                            class="absolute inset-y-0 right-0 px-3 text-gray-600 focus:outline-none">
+                            👁️
+                        </button>
+                    </div>
                 </div>
 
             </div>

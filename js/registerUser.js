@@ -26,12 +26,6 @@ function isValidEmail(email) {
 }
 
 function validateFormData(data) {
-    for (const [key, value] of Object.entries(data)) {
-        if (!value.trim()) {
-            showNotification(`El campo ${key} es obligatorio`, 'bg-red-500');
-            return false;
-        }
-    }
 
     if (!isValidEmail(data.correo)) {
         new Audio('../../songs/error.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));
@@ -45,12 +39,17 @@ function validateFormData(data) {
         return false;
     }
 
-    if (data.password !== data.confirmPassword) {
+    // Validar contraseñas iguales
+    const password = document.getElementById('password').value;
+    const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+    if (password !== passwordConfirmation) {
         new Audio('../../songs/error.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));
         showNotification('Las contraseñas no coinciden', 'bg-red-500');
         return false;
     }
 
+    // Si todo está bien
     return true;
 }
 
@@ -83,6 +82,18 @@ async function submitRegisterForm() {
         if (!response.ok) {
             return response.json().then(errorData => {
                 console.error("Errores de validación del servidor:", errorData.errors);
+                if (errorData.errors) {
+                    // Extraer y mostrar los errores debajo de los campos correspondientes
+                    Object.keys(errorData.errors).forEach(field => {
+                        const errorMessages = errorData.errors[field];
+                        const errorField = document.getElementById(`${field}Error`);
+                        if (errorField) {
+                            errorField.textContent = errorMessages.join(", ");
+                        }
+                    });
+                }
+                new Audio('../../songs/error.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));
+                showNotification('Error en la solicitud', 'bg-red-500');
                 throw new Error(errorData.message || 'Error en la solicitud');
             });
         }
@@ -111,10 +122,19 @@ async function submitRegisterForm() {
 }
 
 
-function showNotification(message, bgColor) {
+function showNotification(messages, bgColor) {
     const notification = document.getElementById("notification");
     if (notification) {
-        notification.textContent = message;
+        if (Array.isArray(messages)) {
+            notification.innerHTML = messages.map(msg => `<div>${msg}</div>`).join(""); // Asegura que múltiples mensajes se muestren como lista.
+        } else if (typeof messages === "object") {
+            // Manejar errores en formato { campo: [mensaje1, mensaje2] }
+            notification.innerHTML = Object.entries(messages)
+                .map(([field, msgs]) => `<div><strong>${field}:</strong> ${msgs.join(", ")}</div>`)
+                .join("");
+        } else {
+            notification.textContent = messages;
+        }
         notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md`;
         notification.style.display = "block";
         setTimeout(() => {
@@ -124,7 +144,6 @@ function showNotification(message, bgColor) {
         console.error("No se encontró el elemento de notificación.");
     }
 }
-
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("userForm").addEventListener("submit", event => {
         event.preventDefault();
