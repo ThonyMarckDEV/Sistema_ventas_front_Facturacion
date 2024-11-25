@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://bath-applying-assessment-welfare.trycloudflare.com";
+import API_BASE_URL from './urlHelper.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const productosMasCompradosContainer = document.getElementById("productosMasComprados");
