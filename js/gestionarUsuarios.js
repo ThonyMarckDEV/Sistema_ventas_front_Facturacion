@@ -20,7 +20,8 @@ export async function listUsers() {
     fetch(`${API_BASE_URL}/api/listarUsuarios`, {
         method: "GET",
         headers: {
-            "ngrok-skip-browser-warning": "69420"
+            "ngrok-skip-browser-warning": "69420",
+            "Authorization": `Bearer ${token}`
         }
     })
     .then(response => {
