@@ -3,8 +3,21 @@ import API_BASE_URL from './urlHelper.js';
 document.addEventListener("DOMContentLoaded", async () => {
     const productosMasCompradosContainer = document.getElementById("productosMasComprados");
 
+    const token = localStorage.getItem("jwt");
+
     try {
-        const response = await fetch(`${API_BASE_URL}/api/productos-mas-comprados`);
+        const response = await fetch(`${API_BASE_URL}/api/productos-mas-comprados`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error en la respuesta del servidor");
+        }
+
         const productos = await response.json();
 
         if (!Array.isArray(productos) || productos.length === 0) {

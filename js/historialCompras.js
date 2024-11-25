@@ -15,7 +15,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const decodedToken = jwt_decode(jwtToken);
             const userId = decodedToken.idUsuario;
 
-            const response = await fetch(`${API_BASE_URL}/api/pedidos-completos/${userId}`);
+            const response = await fetch(`${API_BASE_URL}/api/pedidos-completos/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${jwtToken}`,
+                    "Content-Type": "application/json"
+                }
+            });
             const pedidos = await response.json();
 
             renderPedidos(pedidos);
