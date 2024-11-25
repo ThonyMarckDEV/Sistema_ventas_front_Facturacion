@@ -23,6 +23,8 @@ function adjustMobileLayout() {
 
 // Llamar a showLoading antes de cargar los datos
 async function fetchData(endpoint) {
+     // Verificar y renovar el token antes de cualquier solicitud
+     await verificarYRenovarToken();
     try {
         const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
             method: 'GET',
@@ -64,6 +66,8 @@ async function fetchCantidadPagosCompletados() {
 // Generar gráficos
 async function generarReportes() {
     showLoading();
+     // Verificar y renovar el token antes de cualquier solicitud
+     await verificarYRenovarToken();
     try {
         const etiquetasMeses = obtenerEtiquetasMeses();
         const pedidosMesData = await fetchData('reportes/pedidos-por-mes');

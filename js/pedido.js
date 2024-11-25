@@ -262,7 +262,7 @@ function cerrarModal() {
 }
 
 
-// Inicializar Mercado Pago con tu clave pública
+// Inicializar Mercado Pago con tu clave pública del vendedor
 const mercadopago = new MercadoPago('TEST-75c3d6ce-fc69-4586-9056-e98a32568883', {
     locale: 'es-PE' // Cambia a tu región si es necesario
 });
