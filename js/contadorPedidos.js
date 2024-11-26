@@ -43,6 +43,14 @@ export async function actualizarCantidadPedido() { // Cambiado a singular
             const data = await response.json();
             const cantidad = data.cantidad || 0;
 
+            //=============================================================     
+            // Reproducir el sonido ding
+            var sonido = new Audio('../../songs/ding.mp3'); // Asegúrate de que la ruta sea correcta
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
+            //=============================================================
+
             // Actualiza la cantidad solo si es mayor a 0
             const pedidosCantidadElement = document.getElementById("pedidosCantidad");
             if (cantidad > 0) {
